@@ -1,0 +1,19 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "kenzyyang 英文社区网站后台",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "koa"
+  ],
+  "author": "kenzyyang",
+  "license": "ISC",
+  "devDependencies": {
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0"
+  }
+}
