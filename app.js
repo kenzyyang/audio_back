@@ -11,6 +11,17 @@ app.use(bodyParser());
 const {router} = require('./router/index');
 app.use(router.routes());
 
+// 后端配置跨域
+const cors = require('koa2-cors');
+
+app.use(cors({
+    origin: 'http://localhost:8080',
+    maxAge: 3600,
+    credentials: true,
+    allowMethods: ['POST'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}));
+
 app.listen(3000, () => {
     console.log('[koa] service running in localhost:3000');
 });

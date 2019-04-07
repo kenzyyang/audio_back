@@ -9,9 +9,6 @@ const {user} = require('./user');
 let router = new Router();
 
 router.use('/user', user.routes());
-router.get('/hello',async (ctx)=>{
-    ctx.body = 'hello';
-});
 
 module.exports = {
     router
