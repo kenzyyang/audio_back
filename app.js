@@ -24,4 +24,5 @@ app.use(cors({
 
 app.listen(3000, () => {
     console.log('[koa] service running in localhost:3000');
+    console.log('[koa] env: dev')
 });

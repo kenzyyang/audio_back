@@ -4,7 +4,7 @@
  *   @desc:  用于 user 相关的路由,包括登录注册相关的接口
  * */
 const Router = require('koa-router');
-const User = require('../controller/user');
+const User = require('../controllers/user');
 let user = new Router();
 
 // 通用拦截 get 请求

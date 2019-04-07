@@ -4,8 +4,8 @@
   "description": "kenzyyang 英文社区网站后台",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pm2 start app.js --watch"
+    "dev": "pm2 start config/pm2-dev-config.json",
+    "prop": "pm2 start config/pm2-prod-config.json"
   },
   "keywords": [
     "koa"
