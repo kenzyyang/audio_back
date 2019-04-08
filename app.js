@@ -7,6 +7,15 @@ const app = new Koa();
 const bodyParser = require('koa-bodyparser');
 app.use(bodyParser());
 
+/**
+ *   @author:  kenzyyang
+ *   @date:  2019-4-8
+ *   @desc:  通用请求拦截，校验用户是否登录
+ * */
+const {checkLogin} = require('./midware/checkLogin');
+app.use(checkLogin);
+
+
 // 加载路由中间件
 const {router} = require('./router/index');
 app.use(router.routes());
