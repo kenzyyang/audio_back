@@ -14,6 +14,11 @@ user.get('*',async (ctx)=>{
 user.post('/userLogin', User.userLogin);
 user.post('/userLogout', User.userLogout);
 user.post('/userRegister',User.userRegister);
+user.post('/test',async (ctx) => {
+    const result = ctx.request.headers['authorization'];
+    console.log('进入测试接口');
+
+});
 
 module.exports = {
     user

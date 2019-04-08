@@ -20,6 +20,13 @@ const error = (message = 'error') => {
     }
 };
 
+const notLogin = (message='登录认证失败')=>{
+    return {
+        code: -2,
+        message: message
+    }
+};
+
 // 定义参数缺失的通用返回结构
 const paramsMissing = () => {
     return {
@@ -31,5 +38,6 @@ const paramsMissing = () => {
 module.exports = {
     success,
     error,
-    paramsMissing
+    paramsMissing,
+    notLogin
 };
