@@ -13,6 +13,7 @@ user.get('*',async (ctx)=>{
 });
 user.post('/userLogin', User.userLogin);
 user.post('/userLogout', User.userLogout);
+user.post('/userRegister',User.userRegister);
 
 module.exports = {
     user

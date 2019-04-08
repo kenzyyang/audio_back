@@ -52,7 +52,7 @@ const User = sequelize.define('users', {
             let now = Date.now();
             if (obj.isNewRecord) {
                 obj.createdTime = now;
-                obj.updatedTime = now;
+                obj.updateTime = now;
                 obj.version = 0;
             } else {
                 obj.updatedTime = Date.now();
