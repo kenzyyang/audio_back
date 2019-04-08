@@ -4,8 +4,8 @@
   "description": "kenzyyang 英文社区网站后台",
   "main": "app.js",
   "scripts": {
-    "dev": "pm2 start config/pm2-dev-config.json",
-    "prop": "pm2 start config/pm2-prod-config.json"
+    "dev": "pm2 start pm2-dev-config.json",
+    "prop": "pm2 start pm2-prod-config.json"
   },
   "keywords": [
     "koa"
