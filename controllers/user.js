@@ -10,7 +10,8 @@ const {
 } = require('../common/response');
 const {
     userRegisterService,
-    userLoginService
+    userLoginService,
+    userChangeInfoService
 } = require('../service/user');
 const {jwtGenerator} = require('../common/jwt');
 
@@ -34,9 +35,12 @@ const userLogin = async (ctx, next) => {
             ctx.response.body = error(user);
         } else {
             let token = jwtGenerator({
+                id: user.id,
                 userName: user.userName,
                 email: user.email,
-                nickName: user.nickName
+                nickName: user.nickName,
+                role: user.role,
+                state: user.state
             });
             let result = {
                 token: token,
@@ -80,9 +84,12 @@ const userRegister = async (ctx, next) => {
         } else {
             // 注册成功, 准备生成jwt，返回给前端
             const token = jwtGenerator({
+                id: user.id,
                 userName: user.userName,
                 email: user.email,
-                nickName: user.nickName
+                nickName: user.nickName,
+                role: user.role,
+                state: user.state
             });
             const result = {
                 token: token,
@@ -94,8 +101,31 @@ const userRegister = async (ctx, next) => {
     next();
 };
 
+/**
+ *   @author:  kenzyyang
+ *   @date:  2019-4-10
+ *   @desc:  用户修改信息接口,根据情况和权限决定，普通用户仅能修改自身信息，管理员只能修改普通用户信息，超级管理员无限制
+ * */
+const userChangeInfo = async (ctx, next) => {
+    let userInfo = ctx.tokenInfo;
+    const {id = '', password = '', nickName = '', email = ''} = ctx.request.body;
+    if (!id || !password || !nickName || !email) {
+        ctx.response.body = paramsMissing();
+        return;
+    } else {
+        const user = await userChangeInfoService(ctx.request.body, userInfo);
+        if (typeof user === 'string') {
+            ctx.response.body = error(user);
+        } else {
+            ctx.response.body = success(user);
+        }
+    }
+    next();
+};
+
 module.exports = {
     userLogin,
     userLogout,
-    userRegister
+    userRegister,
+    userChangeInfo
 };

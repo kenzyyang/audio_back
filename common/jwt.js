@@ -11,7 +11,7 @@ const secret = 'kenzyyang1997';
 // jwt生成函数，生成jwt token
 const jwtGenerator = (data) => {
     const token = jwt.sign(data, secret, {
-        expiresIn: 60 //秒到期时间
+        expiresIn: 7200 //到期时间 两个小时，单位 秒
     });
     return token;
 };

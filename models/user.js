@@ -5,6 +5,8 @@
  * */
 const Sequelize = require('sequelize');
 const {sequelize} = require('./model');
+const {USER} = require('../config/rbac');
+
 
 const User = sequelize.define('users', {
     id: {
@@ -44,6 +46,24 @@ const User = sequelize.define('users', {
         type: Sequelize.DOUBLE,
         allowNull: false,
         comment: '更新时间'
+    },
+    /**
+     *  @author:  kenzyyang
+     *  @date:  2019-4-10
+     *  @desc:  添加角色属性，通过角色属性进行权限控制,目前操作较少，使用rbac模型。
+     *          添加用户注销功能，保留用户信息，但不再使用
+     * */
+    role: {
+        type: Sequelize.TINYINT,
+        allowNull: false,
+        defaultValue: USER,
+        comment: '用户权限设置，默认创建的用户为普通用户'
+    },
+    state: {
+        type: Sequelize.TINYINT,
+        allowNull: false,
+        defaultValue: 0,
+        comment: '用户在读状态，0为在读，1为非在读，即账户注销'
     }
 }, {
     timestamps: false,
