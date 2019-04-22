@@ -15,6 +15,7 @@ user.post('/userLogin', User.userLogin);
 user.post('/userLogout', User.userLogout);
 user.post('/userRegister',User.userRegister);
 user.post('/userChangeInfo',User.userChangeInfo);
+user.post('/getAllUser',User.getAllUser);
 user.post('/test',async (ctx) => {
     const result = ctx.request.headers['authorization'];
     console.log('进入测试接口');

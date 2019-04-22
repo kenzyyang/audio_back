@@ -11,7 +11,8 @@ const {
 const {
     userRegisterService,
     userLoginService,
-    userChangeInfoService
+    userChangeInfoService,
+    getAllUserService
 } = require('../service/user');
 const {jwtGenerator} = require('../common/jwt');
 
@@ -123,9 +124,37 @@ const userChangeInfo = async (ctx, next) => {
     next();
 };
 
+/**
+ *   @author:  kenzyyang
+ *   @date:  2019-4-22
+ *   @desc:  获取用户信息的分页接口
+ * */
+const getAllUser = async (ctx, next) => {
+    const {
+        currentPage,
+        currentSize
+    } = ctx.request.body;
+    if (isNaN(Number.parseInt(currentPage)) || isNaN(Number.parseInt(currentSize))) {
+        ctx.response.body = paramsMissing();
+    } else {
+        const allUsers = await getAllUserService(currentPage, currentSize);
+        allUsers.rows.forEach((item) => {
+            // 逻辑层面过滤掉密码
+            item.password = undefined;
+        });
+        const result = {
+            count: allUsers.count,
+            list: allUsers.rows
+        };
+        ctx.response.body = success(result);
+    }
+    next();
+};
+
 module.exports = {
     userLogin,
     userLogout,
     userRegister,
-    userChangeInfo
+    userChangeInfo,
+    getAllUser
 };
