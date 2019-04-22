@@ -104,6 +104,20 @@ const getAllUserService = async (currentPage, currentSize) => {
     }
 };
 
+const userChangePasswordService = async (userInfo, data) => {
+    let result;
+    if (userInfo.role === 0 || (userInfo.role === 1 && data.role === 2)) {
+        result = await userChangePassword(data);
+        if (result.code === 0) {
+            return result.data;
+        } else {
+            return result.data;
+        }
+    } else {
+        return '暂无该操作权限';
+    }
+};
+
 
 /**
  *  @author:  kenzyyang
@@ -183,9 +197,31 @@ const userChange = async (data) => {
                 id: data.id
             }
         });
-        user.password = data.password;
         user.email = data.email;
         user.nickName = data.nickName;
+        await user.save();
+        result = {
+            code: 0,
+            data: user
+        };
+    } catch (err) {
+        result = {
+            code: -1,
+            data: err
+        };
+    }
+    return result;
+};
+
+const userChangePassword = async (data) => {
+    let result = null;
+    try {
+        const user = await User.findOne({
+            where: {
+                id: data.id
+            }
+        });
+        user.password = data.password;
         await user.save();
         result = {
             code: 0,
@@ -225,5 +261,6 @@ module.exports = {
     userRegisterService,
     userLoginService,
     userChangeInfoService,
-    getAllUserService
+    getAllUserService,
+    userChangePasswordService
 };

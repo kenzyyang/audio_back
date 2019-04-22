@@ -12,7 +12,8 @@ const {
     userRegisterService,
     userLoginService,
     userChangeInfoService,
-    getAllUserService
+    getAllUserService,
+    userChangePasswordService
 } = require('../service/user');
 const {jwtGenerator} = require('../common/jwt');
 
@@ -109,8 +110,8 @@ const userRegister = async (ctx, next) => {
  * */
 const userChangeInfo = async (ctx, next) => {
     let userInfo = ctx.tokenInfo;
-    const {id = '', password = '', nickName = '', email = ''} = ctx.request.body;
-    if (!id || !password || !nickName || !email) {
+    const {id = '', nickName = '', email = ''} = ctx.request.body;
+    if (!id || !nickName || !email) {
         ctx.response.body = paramsMissing();
         return;
     } else {
@@ -151,10 +152,33 @@ const getAllUser = async (ctx, next) => {
     next();
 };
 
+/**
+ *   @author: kenzyyang
+ *   @date:  2019-4-22
+ *   @desc:  用户修改密码接口
+ * */
+const userChangePassword = async (ctx, next) => {
+    let userInfo = ctx.tokenInfo;
+    let {id, password, role} = ctx.request.body;
+    if (isNaN(Number.parseInt(id)) || password === undefined || isNaN(Number.parseInt(role))) {
+        ctx.response.body = paramsMissing();
+        return;
+    } else {
+        let result = await userChangePasswordService(userInfo, ctx.request.body);
+        if (typeof result === 'string') {
+            ctx.response.body = error(result);
+        } else {
+            ctx.response.body = success(result);
+        }
+    }
+    next();
+};
+
 module.exports = {
     userLogin,
     userLogout,
     userRegister,
     userChangeInfo,
-    getAllUser
+    getAllUser,
+    userChangePassword
 };

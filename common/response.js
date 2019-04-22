@@ -22,7 +22,7 @@ const error = (message = 'error') => {
 
 const notLogin = (message='登录认证失败')=>{
     return {
-        code: -2,
+        code: -3,
         message: message
     }
 };

@@ -8,15 +8,16 @@ const User = require('../controllers/user');
 let user = new Router();
 
 // 通用拦截 get 请求
-user.get('*',async (ctx)=>{
+user.get('*', async (ctx) => {
     ctx.body = '仅支持post请求';
 });
 user.post('/userLogin', User.userLogin);
 user.post('/userLogout', User.userLogout);
-user.post('/userRegister',User.userRegister);
-user.post('/userChangeInfo',User.userChangeInfo);
-user.post('/getAllUser',User.getAllUser);
-user.post('/test',async (ctx) => {
+user.post('/userRegister', User.userRegister);
+user.post('/userChangeInfo', User.userChangeInfo);
+user.post('/getAllUser', User.getAllUser);
+user.post('/userChangePassword', User.userChangePassword);
+user.post('/test', async (ctx) => {
     const result = ctx.request.headers['authorization'];
     console.log('进入测试接口');
 
