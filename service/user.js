@@ -129,6 +129,15 @@ const userDeleteService = async (userInfo, data) => {
     }
 };
 
+const userSetAdminService = async (userInfo, data) => {
+    if (userInfo.role !== 0) {
+        return '暂无该操作权限';
+    } else {
+        const result = await userChangeRole(data);
+        return result.data;
+    }
+};
+
 /**
  *  @author:  kenzyyang
  *  @date:  2019-4-8
@@ -223,6 +232,30 @@ const userChange = async (data) => {
     return result;
 };
 
+// 修改用户基本信息
+const userChangeRole = async (data) => {
+    let result = null;
+    try {
+        const user = await User.findOne({
+            where: {
+                id: data.id
+            }
+        });
+        user.role = data.role;
+        await user.save();
+        result = {
+            code: 0,
+            data: user
+        };
+    } catch (err) {
+        result = {
+            code: -1,
+            data: err
+        };
+    }
+    return result;
+};
+
 const userChangePassword = async (data) => {
     let result = null;
     try {
@@ -302,5 +335,6 @@ module.exports = {
     userChangeInfoService,
     getAllUserService,
     userChangePasswordService,
-    userDeleteService
+    userDeleteService,
+    userSetAdminService
 };

@@ -14,7 +14,8 @@ const {
     userChangeInfoService,
     getAllUserService,
     userChangePasswordService,
-    userDeleteService
+    userDeleteService,
+    userSetAdminService
 } = require('../service/user');
 const {jwtGenerator} = require('../common/jwt');
 
@@ -186,17 +187,43 @@ const userDelete = async (ctx, next) => {
     if (isNaN(id) || isNaN(role)) {
         ctx.response.body = paramsMissing();
     } else {
-        // :todo 删除逻辑
         const data = {
             id,
             role
         };
         const user = await userDeleteService(userInfo, data);
-        console.log(user);
         if (typeof user === 'string') {
             ctx.response.body = error(user);
         } else {
 
+            ctx.response.body = success(user);
+        }
+    }
+    next();
+};
+
+/**
+ *  @author:  kenzyyang
+ *  @date:  2019-4-24
+ *  @desc:  用户设置管理员接口
+ * */
+const userSetAdmin = async (ctx, next) => {
+    const userInfo = ctx.tokenInfo;
+    const {
+        id,
+        role
+    } = ctx.request.body;
+    if (isNaN(id) || isNaN(role)) {
+        ctx.response.body = paramsMissing();
+    } else {
+        const data = {
+            id,
+            role
+        };
+        const user = await userSetAdminService(userInfo, data);
+        if (typeof user === 'string') {
+            ctx.response.body = error(user);
+        } else {
             ctx.response.body = success(user);
         }
     }
@@ -210,5 +237,6 @@ module.exports = {
     userChangeInfo,
     getAllUser,
     userChangePassword,
-    userDelete
+    userDelete,
+    userSetAdmin
 };
