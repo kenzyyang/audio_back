@@ -192,9 +192,11 @@ const userDelete = async (ctx, next) => {
             role
         };
         const user = await userDeleteService(userInfo, data);
+        console.log(user);
         if (typeof user === 'string') {
             ctx.response.body = error(user);
         } else {
+
             ctx.response.body = success(user);
         }
     }

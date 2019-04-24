@@ -280,18 +280,11 @@ const userDelete = async (id) => {
                 data: '用户不存在'
             };
         } else {
-            let count = await user.destory();
-            if (count === 1) {
-                result = {
-                    code: 0,
-                    data: user
-                };
-            } else {
-                result = {
-                    code: -1,
-                    data: '未知原因，删除失败'
-                };
-            }
+            await user.destroy();
+            result = {
+                code: 0,
+                data: user
+            };
         }
     } catch (err) {
         result = {
