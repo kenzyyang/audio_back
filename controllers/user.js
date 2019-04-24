@@ -13,7 +13,8 @@ const {
     userLoginService,
     userChangeInfoService,
     getAllUserService,
-    userChangePasswordService
+    userChangePasswordService,
+    userDeleteService
 } = require('../service/user');
 const {jwtGenerator} = require('../common/jwt');
 
@@ -174,11 +175,38 @@ const userChangePassword = async (ctx, next) => {
     next();
 };
 
+/**
+ *  @author:  kenzyyang
+ *  @date:  2019-4-24
+ *  @desc:  用户删除接口，仅能删除普通用户
+ * */
+const userDelete = async (ctx, next) => {
+    const userInfo = ctx.tokenInfo;
+    const {id, role} = ctx.request.body;
+    if (isNaN(id) || isNaN(role)) {
+        ctx.response.body = paramsMissing();
+    } else {
+        // :todo 删除逻辑
+        const data = {
+            id,
+            role
+        };
+        const user = await userDeleteService(userInfo, data);
+        if (typeof user === 'string') {
+            ctx.response.body = error(user);
+        } else {
+            ctx.response.body = success(user);
+        }
+    }
+    next();
+};
+
 module.exports = {
     userLogin,
     userLogout,
     userRegister,
     userChangeInfo,
     getAllUser,
-    userChangePassword
+    userChangePassword,
+    userDelete
 };

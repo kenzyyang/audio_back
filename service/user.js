@@ -118,6 +118,16 @@ const userChangePasswordService = async (userInfo, data) => {
     }
 };
 
+const userDeleteService = async (userInfo, data) => {
+    const {id, role} = data;
+    // 操作者不能是用户，被操作者一定是普通用户
+    if (userInfo.role === 2 || data.role !== 2) {
+        return '暂无该操作权限';
+    } else {
+        const user = await userDelete(data.id);
+        return user.data;
+    }
+};
 
 /**
  *  @author:  kenzyyang
@@ -256,11 +266,48 @@ const userQueryAll = async (currentPage, currentSize) => {
     return result;
 };
 
+const userDelete = async (id) => {
+    let result = null;
+    try {
+        const user = await User.findOne({
+            where: {
+                id: id
+            }
+        });
+        if (user === null) {
+            result = {
+                code: -1,
+                data: '用户不存在'
+            };
+        } else {
+            let count = await user.destory();
+            if (count === 1) {
+                result = {
+                    code: 0,
+                    data: user
+                };
+            } else {
+                result = {
+                    code: -1,
+                    data: '未知原因，删除失败'
+                };
+            }
+        }
+    } catch (err) {
+        result = {
+            code: -1,
+            data: err
+        };
+    }
+    return result;
+};
+
 
 module.exports = {
     userRegisterService,
     userLoginService,
     userChangeInfoService,
     getAllUserService,
-    userChangePasswordService
+    userChangePasswordService,
+    userDeleteService
 };
