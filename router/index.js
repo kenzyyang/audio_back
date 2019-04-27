@@ -5,11 +5,14 @@
  * */
 const Router = require('koa-router');
 const {user} = require('./user');
+const {audio} = require('./audio');
 
 let router = new Router();
 
 router.use('/user', user.routes());
+router.use('/audio', audio.routes());
 
 module.exports = {
-    router
+    router,
+    audio
 };

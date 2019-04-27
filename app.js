@@ -3,9 +3,18 @@ const fs = require('fs');
 
 const app = new Koa();
 
-// 加载body 解析器插件
+// // 加载body 解析器插件
 const bodyParser = require('koa-bodyparser');
 app.use(bodyParser());
+
+// 文件上传的解析
+const koaBody = require('koa-body'); //解析上传文件的插件
+app.use(koaBody({
+    multipart: true,
+    formidable: {
+        maxFileSize: 8 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
+    }
+}));
 
 /**
  *   @author:  kenzyyang
