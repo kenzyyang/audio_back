@@ -1,7 +1,14 @@
 const Koa = require('koa');
 const fs = require('fs');
+const path = require('path');
 
 const app = new Koa();
+
+const koaStatic = require('koa-static');
+
+// 静态资源目录，用于存放图片等相关信息
+const staticPath = './public';
+app.use(koaStatic(path.join( __dirname,  staticPath)));
 
 // 文件上传的body解析
 const koaBody = require('koa-body'); //解析上传文件的插件
