@@ -3,11 +3,7 @@ const fs = require('fs');
 
 const app = new Koa();
 
-// // 加载body 解析器插件
-const bodyParser = require('koa-bodyparser');
-app.use(bodyParser());
-
-// 文件上传的解析
+// 文件上传的body解析
 const koaBody = require('koa-body'); //解析上传文件的插件
 app.use(koaBody({
     multipart: true,
@@ -31,6 +27,11 @@ app.use(router.routes());
 
 // 后端配置跨域
 const cors = require('koa2-cors');
+
+app.use((ctx, next)=>{
+    console.log(`[koa]: [${ctx.method.toUpperCase()}] ${ctx.url}`);
+    next();
+});
 
 app.use(cors({
     origin: 'http://localhost:8080',

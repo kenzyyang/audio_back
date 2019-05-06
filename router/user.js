@@ -8,7 +8,7 @@ const User = require('../controllers/user');
 let user = new Router();
 
 // 通用拦截 get 请求
-user.get('*', async (ctx) => {
+user.get('*', async (ctx,next) => {
     ctx.body = '仅支持post请求';
 });
 user.post('/userLogin', User.userLogin);

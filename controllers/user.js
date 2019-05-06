@@ -30,6 +30,7 @@ const {jwtGenerator} = require('../common/jwt');
  * */
 const userLogin = async (ctx, next) => {
     const data = ctx.request.body;
+    console.log('我进来了');
     const {userName, password} = data;
     if (userName === undefined || password === undefined) {
         ctx.response.body = paramsMissing();
