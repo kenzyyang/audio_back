@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "pm2 start pm2-dev-config.json",
-    "prop": "pm2 start pm2-prod-config.json"
+    "prop": "pm2 start pm2-prod-config.json",
+    "stop": "pm2 stop all && pm2 delete all"
   },
   "keywords": [
     "koa"

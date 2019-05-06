@@ -26,8 +26,9 @@ const audioAddService = async (userInfo, data) => {
     }
 };
 
-const audioGetAllService = async () => {
-    let result = await audioGetAll();
+const audioGetAllService = async (data) => {
+    const {currentPage, currentSize} = data;
+    let result = await audioGetAll(currentPage, currentSize);
     if (result.code === 0) {
         return result.data;
     } else {
@@ -72,10 +73,13 @@ const audioAdd = async (data) => {
 
 };
 
-const audioGetAll = async () => {
+const audioGetAll = async (currentPage, currentSize) => {
     let result = null;
     try {
-        let audios = await Audio.findAll();
+        let audios = await Audio.findAndCountAll({
+            offset: (currentPage - 1) * currentSize,
+            limit: currentSize
+        });
         result = {
             code: 0,
             data: audios

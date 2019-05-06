@@ -36,12 +36,27 @@ const audioAdd = async (ctx, next) => {
 };
 
 const audioGetAll = async (ctx, next) => {
-    let audios = await audioGetAllService();
-    if (typeof audios === 'string') {
-        console.log(audios);
-        ctx.response.body = error(audios);
+    const {
+        currentPage,
+        currentSize
+    } = ctx.request.body;
+    if (isNaN(Number.parseInt(currentPage)) || isNaN(Number.parseInt(currentSize))) {
+        ctx.response.body = paramsMissing();
     } else {
-        ctx.response.body = success(audios);
+        let data = {
+            currentPage,
+            currentSize
+        };
+        let audios = await audioGetAllService(data);
+        if (typeof audios === 'string') {
+            ctx.response.body = error(audios);
+        } else {
+            const result = {
+                count: audios.count,
+                list: audios.rows
+            };
+            ctx.response.body = success(result);
+        }
     }
     next();
 };
