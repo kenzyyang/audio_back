@@ -4,7 +4,8 @@ const {
     paramsMissing
 } = require('../common/response');
 const {
-    audioAddService
+    audioAddService,
+    audioGetAllService
 } = require('../service/audio');
 
 const audioAdd = async (ctx, next) => {
@@ -34,6 +35,18 @@ const audioAdd = async (ctx, next) => {
     next();
 };
 
+const audioGetAll = async (ctx, next) => {
+    let audios = await audioGetAllService();
+    if (typeof audios === 'string') {
+        console.log(audios);
+        ctx.response.body = error(audios);
+    } else {
+        ctx.response.body = success(audios);
+    }
+    next();
+};
+
 module.exports = {
-    audioAdd
+    audioAdd,
+    audioGetAll
 };

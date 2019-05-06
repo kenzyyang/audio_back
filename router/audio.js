@@ -12,6 +12,7 @@ audio.get('*', async (ctx) => {
     ctx.body = '仅支持post请求';
 });
 audio.post('/audioAdd', Audio.audioAdd);
+audio.post('/audioGetAll', Audio.audioGetAll);
 audio.post('/test', async (ctx) => {
     const result = ctx.request.headers['authorization'];
     console.log('进入测试接口');

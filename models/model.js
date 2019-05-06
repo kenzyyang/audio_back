@@ -8,7 +8,8 @@ const {config} = require('../config/db');
 
 const sequelize = new Sequelize(config.database, config.userName, config.password, {
     host: config.host,
-    dialect: 'mysql'
+    dialect: 'mysql',
+    logging: false
 });
 
 module.exports = {
