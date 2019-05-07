@@ -68,11 +68,14 @@ const audioAdd = async (data) => {
         });
         // 创建可读流
         const reader = fs.createReadStream(data.cover.path);
-        let filePath = path.join(__dirname, '../image/') + `/${audio.id}.${data.cover.type.split('/')[1]}`;
+        let filePath = path.join(__dirname, '../public/image/') + `${audio.id}.${data.cover.type.split('/')[1]}`;
         // 创建可写流
         const upStream = fs.createWriteStream(filePath);
         // 可读流通过管道写入可写流
         reader.pipe(upStream);
+        // 更改数据库内容
+        audio.coverPath = /image/ + audio.id + '.' + data.cover.type.split('/')[1];
+        await audio.save();
         result = {
             code: 0,
             data: audio
