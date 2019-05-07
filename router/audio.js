@@ -13,10 +13,10 @@ audio.get('*', async (ctx) => {
 });
 audio.post('/audioAdd', Audio.audioAdd);
 audio.post('/audioGetAll', Audio.audioGetAll);
+audio.post('/audioDelete', Audio.audioDelete);
 audio.post('/test', async (ctx) => {
     const result = ctx.request.headers['authorization'];
     console.log('进入测试接口');
-
 });
 
 module.exports = {

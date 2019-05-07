@@ -41,6 +41,20 @@ const audioGetAllService = async (data) => {
     }
 };
 
+const audioDeleteService = async (userInfo, id) => {
+    let result = null;
+    if (userInfo.role !== 0) {
+        result = '暂无权限操作';
+    } else {
+        let result = await audioDelete(id);
+        if (result.code === 0) {
+            return result.data;
+        } else {
+            return result.message;
+        }
+    }
+};
+
 
 // 数据库操作
 const audioAdd = async (data) => {
@@ -93,8 +107,37 @@ const audioGetAll = async (currentPage, currentSize) => {
     return result;
 };
 
+const audioDelete = async (id) => {
+    let result = null;
+    try {
+        let audio = await Audio.findOne({
+            where: {
+                id: id
+            }
+        });
+        if (audio === null) {
+            result = {
+                code: -1,
+                message: '该记录不存在'
+            };
+        } else {
+            await audio.destroy();
+            result = {
+                code: 0,
+                data: audio
+            };
+        }
+    } catch (err) {
+        result = {
+            code: -1,
+            message: err
+        }
+    }
+    return result
+};
 
 module.exports = {
     audioAddService,
-    audioGetAllService
+    audioGetAllService,
+    audioDeleteService
 };
