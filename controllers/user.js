@@ -26,7 +26,7 @@ const {jwtGenerator} = require('../common/jwt');
  *   @desc: 用户登录接口
  *   @method: POST
  *   @param: userName  string  用户名
- *   @param: password:  string  密码
+ *   @param: password:  string  密码通过sha1 加密传输，后台不存明文
  * */
 const userLogin = async (ctx, next) => {
     const data = ctx.request.body;

@@ -8,14 +8,14 @@ const koaStatic = require('koa-static');
 
 // 静态资源目录，用于存放图片等相关信息
 const staticPath = './public';
-app.use(koaStatic(path.join( __dirname,  staticPath)));
+app.use(koaStatic(path.join(__dirname, staticPath)));
 
 // 文件上传的body解析
 const koaBody = require('koa-body'); //解析上传文件的插件
 app.use(koaBody({
     multipart: true,
     formidable: {
-        maxFileSize: 8 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
+        maxFileSize: 1024 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
     }
 }));
 
@@ -35,7 +35,7 @@ app.use(router.routes());
 // 后端配置跨域
 const cors = require('koa2-cors');
 
-app.use((ctx, next)=>{
+app.use((ctx, next) => {
     console.log(`[koa]: [${ctx.method.toUpperCase()}] ${ctx.url}`);
     next();
 });

@@ -23,11 +23,6 @@ const User = sequelize.define('audioChapter', {
         allowNull: false,
         comment: '有声书 章序号'
     },
-    section: {
-        type: Sequelize.TINYINT,
-        allowNull: false,
-        comment: '有声书 节序号'
-    },
     audioPath: {
         type: Sequelize.STRING(255),
         unique: true,
