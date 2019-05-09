@@ -67,6 +67,24 @@ const chapterDeleteService = async (userInfo, id) => {
     }
 };
 
+/**
+ *  @author:  kenzyyang
+ *  @date:  2019-5-9
+ *  @desc:  查询某个有声书的所有章节
+ * */
+const chapterGetAllByIdService = async (data) => {
+    const {
+        id,
+        currentPage,
+        currentSize
+    } = data;
+    let result = await chapterGetAllById(id, currentPage, currentSize);
+    if (result.code === 0) {
+        return result.data;
+    } else {
+        return result.message;
+    }
+};
 
 const chapterAdd = async (data) => {
     const {
@@ -167,8 +185,32 @@ const chapterDelete = async (id) => {
     return result;
 };
 
+const chapterGetAllById = async (id, currentPage, currentSize) => {
+    let result = null;
+    try {
+        const chapters = Chapter.findAndCountAll({
+            where: {
+                belongedAudio: id
+            },
+            offset: (currentPage - 1) * currentSize,
+            limit: currentSize
+        });
+        result = {
+            code: 0,
+            data: chapters
+        };
+    } catch (err) {
+        result = {
+            code: -1,
+            message: err
+        };
+    }
+    return result;
+};
+
 module.exports = {
     chapterAddService,
     chapterAddUploadService,
-    chapterDeleteService
+    chapterDeleteService,
+    chapterGetAllByIdService
 };

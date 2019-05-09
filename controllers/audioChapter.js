@@ -12,7 +12,8 @@ const {
 const {
     chapterAddService,
     chapterAddUploadService,
-    chapterDeleteService
+    chapterDeleteService,
+    chapterGetAllByIdService
 } = require('../service/audioChapter');
 
 /**
@@ -79,29 +80,68 @@ const chapterAudioUpload = async (ctx, next) => {
     next();
 };
 
+/**
+ *  @author:  kenzyyang
+ *  @date:  2019-5-9
+ *  @desc:  删除章节接口
+ *  @param:  id  number  chapter编号
+ * */
 const chapterDelete = async (ctx, next) => {
     const userInfo = ctx.tokenInfo;
     const {
-        id=''
+        id = ''
     } = ctx.request.body;
-    if(id === '' || isNaN(Number.parseInt(id))){
+    if (id === '' || isNaN(Number.parseInt(id))) {
         ctx.response.body = paramsMissing();
-    }
-    else{
-        const chapter = await chapterDeleteService(userInfo,id);
-        if(typeof chapter === 'string'){
+    } else {
+        const chapter = await chapterDeleteService(userInfo, id);
+        if (typeof chapter === 'string') {
             ctx.response.body = error(chapter);
-        }
-        else{
+        } else {
             ctx.response.body = success(chapter);
         }
     }
     next();
+};
 
+/**
+ *  @author:  kenzyyang
+ *  @date:  2019-5-9
+ *  @desc:  分页查询章节信息接口
+ *  @param< currentPage  number  当前页
+ *  @param< currentSize  number  当前页条数
+ * */
+const audioGetAllById = async (ctx, next) => {
+    const {
+        id = '',
+        currentPage = '',
+        currentSize = ''
+    } = ctx.request.body;
+    if (id === '' || isNaN(Number.parseInt(id)) || currentPage === '' || currentSize === '' || isNaN(Number.parseInt(currentSize)) || isNaN(Number.parseInt(currentPage))) {
+        ctx.response.body = paramsMissing();
+    } else {
+        const params = {
+            id,
+            currentPage,
+            currentSize
+        };
+        let chapters = await chapterGetAllByIdService(params);
+        if (typeof chapters === 'string') {
+            ctx.response.body = error(chapters);
+        } else {
+            let result = {
+                count: chapters.count,
+                list: chapters.rows
+            };
+            ctx.response.body = success(result);
+        }
+    }
+    next();
 };
 
 module.exports = {
     chapterAdd,
     chapterAudioUpload,
-    chapterDelete
+    chapterDelete,
+    audioGetAllById
 };
