@@ -11,7 +11,8 @@ const {
 } = require('../common/response');
 const {
     chapterAddService,
-    chapterAddUploadService
+    chapterAddUploadService,
+    chapterDeleteService
 } = require('../service/audioChapter');
 
 /**
@@ -78,7 +79,29 @@ const chapterAudioUpload = async (ctx, next) => {
     next();
 };
 
+const chapterDelete = async (ctx, next) => {
+    const userInfo = ctx.tokenInfo;
+    const {
+        id=''
+    } = ctx.request.body;
+    if(id === '' || isNaN(Number.parseInt(id))){
+        ctx.response.body = paramsMissing();
+    }
+    else{
+        const chapter = await chapterDeleteService(userInfo,id);
+        if(typeof chapter === 'string'){
+            ctx.response.body = error(chapter);
+        }
+        else{
+            ctx.response.body = success(chapter);
+        }
+    }
+    next();
+
+};
+
 module.exports = {
     chapterAdd,
-    chapterAudioUpload
+    chapterAudioUpload,
+    chapterDelete
 };
