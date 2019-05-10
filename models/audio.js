@@ -19,6 +19,11 @@ const User = sequelize.define('audio', {
         comment: '有声书名称，保证唯一',
         allowNull: false
     },
+    audioAbstract: {
+        type: Sequelize.STRING(500),
+        comment: '有声书简介和摘要',
+        allowNull: false
+    },
     audioType: {
         type: Sequelize.TINYINT,
         comment: '有声书类型, 0 为中文  1  为英文，后续从这里扩展',

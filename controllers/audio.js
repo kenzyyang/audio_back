@@ -14,17 +14,19 @@ const audioAdd = async (ctx, next) => {
     const {
         audioName = '',
         audioType = '',
+        audioAbstract=''
     } = ctx.request.body;
     const {
         cover = ''
     } = ctx.request.files;
-    if (!audioName || !audioType || !cover || (cover.type !== 'image/jpg' && cover.type !== 'image/jpeg')) {
+    if (!audioName || !audioType || !audioAbstract || !cover || (cover.type !== 'image/jpg' && cover.type !== 'image/jpeg')) {
         ctx.response.body = paramsMissing();
     } else {
         const data = {
             audioName,
             audioType,
-            cover
+            cover,
+            audioAbstract
         };
         let audio = await audioAddService(userInfo, data);
         if (typeof audio === 'string') {

@@ -11,6 +11,7 @@ const audioAddService = async (userInfo, data) => {
             audioType: data.audioType,
             cover: data.cover,
             createUser: userInfo.userName,
+            audioAbstract: data.audioAbstract
         };
         let result = await audioAdd(params);
         if (result.code === 0) {
@@ -65,6 +66,7 @@ const audioAdd = async (data) => {
             audioType: data.audioType,
             coverPath: 'default',
             createUser: data.createUser,
+            audioAbstract: data.audioAbstract
         });
         // 创建可读流
         const reader = fs.createReadStream(data.cover.path);
