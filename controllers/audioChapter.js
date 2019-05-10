@@ -13,7 +13,8 @@ const {
     chapterAddService,
     chapterAddUploadService,
     chapterDeleteService,
-    chapterGetAllByIdService
+    chapterGetAllByIdService,
+    chapterChangeService
 } = require('../service/audioChapter');
 
 /**
@@ -67,7 +68,7 @@ const chapterAudioUpload = async (ctx, next) => {
     const {
         audio = null
     } = ctx.request.files;
-    if (id === '' || isNaN(Number.parseInt(id)) || !/.mp3$/.test(audio.name) || audio.type !== 'audio/mpeg') {
+    if (id === '' || isNaN(Number.parseInt(id)) || !/.mp3$/.test(audio.name) || (audio.type !== 'audio/mp3' && audio.type !== 'audio/mpeg')) {
         ctx.response.body = paramsMissing();
     } else {
         const params = {
@@ -103,6 +104,39 @@ const chapterDelete = async (ctx, next) => {
             ctx.response.body = error(chapter);
         } else {
             ctx.response.body = success(chapter);
+        }
+    }
+    next();
+};
+
+/**
+ *  @author:  kenzyyang
+ *  @date:  2019-5-10
+ *  @desc:  修改章节信息接口
+ * */
+const chapterChange = async (ctx, next) => {
+    const userInfo = ctx.tokenInfo;
+    const {
+        id = '',
+        title = '',
+        abstract = '',
+        chapter = ''
+    } = ctx.request.body;
+    if (id === '' || title === '' || abstract === '' || chapter === '' || isNaN(Number.parseInt(id)) || isNaN(Number.parseInt(chapter))) {
+        ctx.response.body = paramsMissing();
+    } else {
+        const params = {
+            id,
+            title,
+            abstract,
+            chapter
+        };
+        let chapters = await chapterChangeService(userInfo, params);
+        if(typeof chapters === 'string'){
+            ctx.response.body = error(chapters);
+        }
+        else{
+            ctx.response.body = success(chapters);
         }
     }
     next();
@@ -147,5 +181,6 @@ module.exports = {
     chapterAdd,
     chapterAudioUpload,
     chapterDelete,
-    audioGetAllById
+    audioGetAllById,
+    chapterChange
 };

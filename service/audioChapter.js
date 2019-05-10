@@ -71,6 +71,30 @@ const chapterDeleteService = async (userInfo, id) => {
 
 /**
  *  @author:  kenzyyang
+ *  @date:  2019-5-10
+ *  @desc:  章节修改接口
+ * */
+const chapterChangeService = async (userInfo, data) => {
+    if (userInfo.role === 2) {
+        return '暂无操作权限';
+    } else {
+        const params = {
+            id: data.id,
+            title: data.title,
+            abstract: data.abstract,
+            chapter: data.chapter
+        };
+        const result = await chapterChange(params);
+        if (result.code === 0) {
+            return result.data;
+        } else {
+            return result.message.toString();
+        }
+    }
+};
+
+/**
+ *  @author:  kenzyyang
  *  @date:  2019-5-9
  *  @desc:  查询某个有声书的所有章节
  * */
@@ -159,6 +183,44 @@ const chapterAddUpload = async (id, audio) => {
     return result;
 };
 
+const chapterChange = async (data) => {
+    let result = null;
+    try {
+        const {
+            id,
+            title,
+            abstract,
+            chapter
+        } = data;
+        const chapters = await Chapter.findOne({
+            where: {
+                id: data.id
+            }
+        });
+        if (chapters !== null) {
+            chapters.title = title;
+            chapters.abstract = abstract;
+            chapters.chapter = chapter;
+            await chapters.save();
+            result = {
+                code: 0,
+                data: chapters
+            };
+        } else {
+            result = {
+                code: -1,
+                message: '该记录不存在'
+            };
+        }
+    } catch (err) {
+        result = {
+            code: -1,
+            message: err
+        };
+    }
+    return result;
+};
+
 const chapterDelete = async (id) => {
     let result = null;
     try {
@@ -171,7 +233,12 @@ const chapterDelete = async (id) => {
             await chapter.destroy();
             // 删除录音
             let filePath = path.join(__dirname, '../public/audio/') + `${chapter.id}.mp3`;
-            fs.unlinkSync(filePath);
+            if (fs.existsSync(filePath)) {
+                let fileStatus = fs.statSync(filePath);
+                if (fileStatus.isFile()) {
+                    fs.unlinkSync(filePath);
+                }
+            }
             result = {
                 code: 0,
                 data: chapter
@@ -218,5 +285,6 @@ module.exports = {
     chapterAddService,
     chapterAddUploadService,
     chapterDeleteService,
-    chapterGetAllByIdService
+    chapterGetAllByIdService,
+    chapterChangeService
 };
