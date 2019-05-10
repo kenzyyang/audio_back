@@ -38,6 +38,20 @@ const User = sequelize.define('audioChapter', {
         type: Sequelize.DOUBLE,
         allowNull: false,
         comment: '创建时间',
+    },
+    /**
+     *  @author: kenzyyang
+     *  @desc:  追加章节标题和摘要
+     * */
+    title: {
+        type:  Sequelize.STRING(255),
+        allowNull: false,
+        comment: '章节标题'
+    },
+    abstract: {
+        type: Sequelize.STRING(500),
+        allowNull: false,
+        comment: '摘要'
     }
 }, {
     timestamps: false,

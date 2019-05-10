@@ -19,7 +19,9 @@ const chapterAddService = async (userInfo, data) => {
         const params = {
             belongedAudio: data.belongedAudio,
             chapter: data.chapter,
-            createUser: userInfo.userName
+            createUser: userInfo.userName,
+            title: data.title,
+            abstract: data.abstract
         };
         let result = await chapterAdd(params);
         if (result.code === 0) {
@@ -90,12 +92,16 @@ const chapterAdd = async (data) => {
     const {
         belongedAudio = '',
         chapter = '',
-        createUser = ''
+        createUser = '',
+        title = '',
+        abstract = ''
     } = data;
     const createTime = Date.now();
     let result = null;
     try {
         const chapters = await Chapter.create({
+            title,
+            abstract,
             belongedAudio,
             chapter,
             createUser,

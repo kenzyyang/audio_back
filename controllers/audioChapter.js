@@ -29,13 +29,17 @@ const chapterAdd = async (ctx, next) => {
     const {
         belongedAudio = '',
         chapter = '',
+        title = '',
+        abstract = ''
     } = ctx.request.body;
-    if (belongedAudio === '' || chapter === '' || isNaN(Number.parseInt(belongedAudio)) || isNaN(Number.parseInt(chapter))) {
+    if (belongedAudio === '' || chapter === '' || title === '' || abstract === '' || isNaN(Number.parseInt(belongedAudio)) || isNaN(Number.parseInt(chapter))) {
         ctx.response.body = paramsMissing();
     } else {
         const params = {
             belongedAudio,
-            chapter
+            chapter,
+            title,
+            abstract
         };
         const chapters = await chapterAddService(userInfo, params);
         if (typeof chapters === 'string') {
