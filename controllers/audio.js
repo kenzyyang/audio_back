@@ -80,7 +80,7 @@ const audioGetOne = async (ctx, next) => {
             ctx.response.body = success(audio);
         }
     }
-
+    next();
 };
 
 const audioDelete = async (ctx, next) => {
