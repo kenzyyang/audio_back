@@ -51,13 +51,62 @@ const audioDeleteService = async (userInfo, id) => {
         if (result.code === 0) {
             return result.data;
         } else {
-            return result.message;
+            return result.message.toString();
         }
     }
 };
 
+const audioChangeService = async (userInfo, data) => {
+    let result = null;
+    if (userInfo.role !== 0) {
+        result = '暂无权限操作';
+    } else {
+        let result = await audioChange(data);
+        if (result.code === 0) {
+            return result.data;
+        } else {
+            return result.message.toString();
+        }
+    }
+};
+
+const audioGetOneService = async (id) => {
+    let result = await audioGetOne(id);
+    if (result.code === 0) {
+        return result.data;
+    } else {
+        return result.message.toString();
+    }
+};
 
 // 数据库操作
+const audioGetOne = async (id) => {
+    let result = null;
+    try {
+        const audio = await Audio.findOne({
+            where: {
+                id: id
+            }
+        });
+        if (audio === null) {
+            result = {
+                code: -1,
+                message: '记录不存在'
+            };
+        } else {
+            result = {
+                code: 0,
+                data: audio
+            }
+        }
+    } catch (err) {
+        result = {
+            code: -1,
+            message: err
+        };
+    }
+    return result;
+};
 const audioAdd = async (data) => {
     let result = null;
     try {
@@ -89,8 +138,41 @@ const audioAdd = async (data) => {
         };
     }
     return result;
+};
+
+const audioChange = async (data) => {
+    let result = null;
+    try {
+        let audio = await Audio.findOne({
+            where: {
+                id: data.id
+            }
+        });
+        if (audio === null) {
+            result = {
+                code: -1,
+                message: '记录不存在'
+            };
+        } else {
+            audio.audioName = data.audioName;
+            audio.audioType = data.audioType;
+            audio.audioAbstract = data.audioAbstract;
+            await audio.save();
+            result = {
+                code: 0,
+                data: audio
+            };
+        }
+    } catch (err) {
+        result = {
+            code: -1,
+            data: err
+        };
+    }
+    return result;
 
 };
+
 
 const audioGetAll = async (currentPage, currentSize) => {
     let result = null;
@@ -144,5 +226,7 @@ const audioDelete = async (id) => {
 module.exports = {
     audioAddService,
     audioGetAllService,
-    audioDeleteService
+    audioDeleteService,
+    audioChangeService,
+    audioGetOneService
 };

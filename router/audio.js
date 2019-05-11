@@ -14,6 +14,8 @@ audio.get('*', async (ctx) => {
 audio.post('/audioAdd', Audio.audioAdd);
 audio.post('/audioGetAll', Audio.audioGetAll);
 audio.post('/audioDelete', Audio.audioDelete);
+audio.post('/audioChange', Audio.audioChange);
+audio.post('/audioGetOne', Audio.audioGetOne);
 
 module.exports = {
     audio

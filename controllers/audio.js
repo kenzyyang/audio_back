@@ -6,7 +6,9 @@ const {
 const {
     audioAddService,
     audioGetAllService,
-    audioDeleteService
+    audioDeleteService,
+    audioChangeService,
+    audioGetOneService
 } = require('../service/audio');
 
 const audioAdd = async (ctx, next) => {
@@ -14,7 +16,7 @@ const audioAdd = async (ctx, next) => {
     const {
         audioName = '',
         audioType = '',
-        audioAbstract=''
+        audioAbstract = ''
     } = ctx.request.body;
     const {
         cover = ''
@@ -64,6 +66,23 @@ const audioGetAll = async (ctx, next) => {
     next();
 };
 
+const audioGetOne = async (ctx, next) => {
+    const {
+        id = ''
+    } = ctx.request.body;
+    if (id === '' || isNaN(Number.parseInt(id))) {
+        ctx.response.body = paramsMissing();
+    } else {
+        let audio = await audioGetOneService(id);
+        if (typeof audio === 'string') {
+            ctx.response.body = error(audio);
+        } else {
+            ctx.response.body = success(audio);
+        }
+    }
+
+};
+
 const audioDelete = async (ctx, next) => {
     const userInfo = ctx.tokenInfo;
     const {
@@ -82,8 +101,37 @@ const audioDelete = async (ctx, next) => {
     next();
 };
 
+const audioChange = async (ctx, next) => {
+    const userInfo = ctx.tokenInfo;
+    const {
+        id = '',
+        audioName = '',
+        audioType = '',
+        audioAbstract = '',
+    } = ctx.request.body;
+    if (id === '' || isNaN(Number.parseInt(id)) || audioName === '' || audioType === '' || audioAbstract === '') {
+        ctx.response.body = paramsMissing();
+    } else {
+        const data = {
+            id,
+            audioName,
+            audioType,
+            audioAbstract
+        };
+        const audio = await audioChangeService(userInfo, data);
+        if (typeof audio === 'string') {
+            ctx.response.body = error(audio);
+        } else {
+            ctx.response.body = success(audio);
+        }
+    }
+    next();
+};
+
 module.exports = {
     audioAdd,
     audioGetAll,
-    audioDelete
+    audioDelete,
+    audioChange,
+    audioGetOne
 };
