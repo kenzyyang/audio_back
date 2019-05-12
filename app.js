@@ -6,9 +6,23 @@ const app = new Koa();
 
 const koaStatic = require('koa-static');
 
+// 访问静态资源时,为其添加content-rang
+app.use(async (ctx, next) => {
+    const url = ctx.request.url;
+    await next();
+    console.log(url);
+    const reg = /\/audio\/([0-9]+).mp3/;
+    if (reg.test(url)) {
+        const id = reg.exec(url)[1];
+        console.log('正则匹配');
+        console.log(id);
+    }
+});
+
 // 静态资源目录，用于存放图片等相关信息
 const staticPath = './public';
 app.use(koaStatic(path.join(__dirname, staticPath)));
+
 
 // 文件上传的body解析
 const koaBody = require('koa-body'); //解析上传文件的插件
