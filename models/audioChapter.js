@@ -52,6 +52,12 @@ const User = sequelize.define('audioChapter', {
         type: Sequelize.STRING(500),
         allowNull: false,
         comment: '摘要'
+    },
+    uploaded: {
+        type: Sequelize.BOOLEAN,
+        allowNull:false,
+        defaultValue: false,
+        comment: '是否上传录音的标志位'
     }
 }, {
     timestamps: false,

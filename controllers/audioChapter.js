@@ -64,6 +64,7 @@ const chapterAudioUpload = async (ctx, next) => {
     const userInfo = ctx.tokenInfo;
     const {
         id = '',
+        uploaded
     } = ctx.request.body;
     const {
         audio = null
@@ -73,7 +74,7 @@ const chapterAudioUpload = async (ctx, next) => {
     } else {
         const params = {
             id,
-            audio
+            audio,
         };
         let chapter = await chapterAddUploadService(userInfo, params);
         if (typeof chapter === 'string') {
@@ -153,15 +154,17 @@ const audioGetAllById = async (ctx, next) => {
     const {
         id = '',
         currentPage = '',
-        currentSize = ''
+        currentSize = '',
+        uploaded
     } = ctx.request.body;
-    if (id === '' || isNaN(Number.parseInt(id)) || currentPage === '' || currentSize === '' || isNaN(Number.parseInt(currentSize)) || isNaN(Number.parseInt(currentPage))) {
+    if (id === ''|| uploaded=== undefined || isNaN(Number.parseInt(id)) || currentPage === '' || currentSize === '' || isNaN(Number.parseInt(currentSize)) || isNaN(Number.parseInt(currentPage))) {
         ctx.response.body = paramsMissing();
     } else {
         const params = {
             id,
             currentPage,
-            currentSize
+            currentSize,
+            uploaded
         };
         let chapters = await chapterGetAllByIdService(params);
         if (typeof chapters === 'string') {

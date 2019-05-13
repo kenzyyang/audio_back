@@ -102,9 +102,10 @@ const chapterGetAllByIdService = async (data) => {
     const {
         id,
         currentPage,
-        currentSize
+        currentSize,
+        uploaded
     } = data;
-    let result = await chapterGetAllById(id, currentPage, currentSize);
+    let result = await chapterGetAllById(id, currentPage, currentSize,uploaded);
     if (result.code === 0) {
         return result.data;
     } else {
@@ -168,6 +169,7 @@ const chapterAddUpload = async (id, audio) => {
             reader.pipe(upStream);
             // 更改数据库内容
             chapter.audioPath = /audio/ + id + '.mp3';
+            chapter.uploaded = true;
             await chapter.save();
             result = {
                 code: 0,
@@ -258,16 +260,29 @@ const chapterDelete = async (id) => {
     return result;
 };
 
-const chapterGetAllById = async (id, currentPage, currentSize) => {
+const chapterGetAllById = async (id, currentPage, currentSize,uploaded) => {
     let result = null;
     try {
-        const chapters = Chapter.findAndCountAll({
-            where: {
-                belongedAudio: id
-            },
-            offset: (currentPage - 1) * currentSize,
-            limit: currentSize
-        });
+        let  chapters = null;
+        if(uploaded === 'all'){
+            chapters = Chapter.findAndCountAll({
+                where: {
+                    belongedAudio: id,
+                },
+                offset: (currentPage - 1) * currentSize,
+                limit: currentSize
+            });
+        }
+        else{
+            chapters = Chapter.findAndCountAll({
+                where: {
+                    belongedAudio: id,
+                    uploaded: uploaded
+                },
+                offset: (currentPage - 1) * currentSize,
+                limit: currentSize
+            });
+        }
         result = {
             code: 0,
             data: chapters
