@@ -11,7 +11,7 @@ const staticPath = './public';
 app.use(koaStatic(path.join(__dirname, staticPath), {
     // 修改koa-static 源代码，将serHeaders 中的第一个参数改为 ctx.response。然后设置Accept-Ranges 使媒体类型能片段获取
     setHeaders: (response, path, stats) => {
-        response.set('Accept-Ranges','bytes');
+        response.set('Accept-Ranges', 'bytes');
     }
 }));
 

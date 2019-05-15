@@ -3,7 +3,7 @@
  *  @date:  2019-4-8
  *  @desc:  登录验证相关的处理函数
  * */
-const excludeUrl = ['/user/userLogin', '/user/userRegister'];
+const excludeUrl = ['/user/userLogin', '/user/userRegister', '/audio/audioGetAll', '/audio/audioGetOne', '/chapter/chapterGetAllById'];
 const {jwtAuth} = require('../common/jwt');
 const {success, notLogin} = require('../common/response');
 
