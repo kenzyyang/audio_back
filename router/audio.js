@@ -16,6 +16,26 @@ audio.post('/audioGetAll', Audio.audioGetAll);
 audio.post('/audioDelete', Audio.audioDelete);
 audio.post('/audioChange', Audio.audioChange);
 audio.post('/audioGetOne', Audio.audioGetOne);
+audio.post('/audioGetAllByType', Audio.audioGetAllByType);
+audio.post('/audioGetAllByUserName', Audio.audioGetAllByUserName);
+audio.post('/audioGetType', async (ctx, next) => {
+    ctx.response.body = {
+        code: 0,
+        data: {
+            typeList: [
+                {
+                    value: 1,
+                    label: '英文书'
+                },
+                {
+                    value: 2,
+                    label: '中文书'
+                }
+            ]
+        }
+    };
+    next();
+});
 
 module.exports = {
     audio

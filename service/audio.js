@@ -42,6 +42,36 @@ const audioGetAllService = async (data) => {
     }
 };
 
+const audioGetAllByTypeService = async (data) => {
+    const {currentPage, currentSize, audioType} = data;
+    let result = await audioGetAllByType(currentPage, currentSize, audioType);
+    if (result.code === 0) {
+        return result.data;
+    } else {
+        // 如果报错，将异常信息拼接之后返回到前端
+        let error = '';
+        for (let i in result.data['errors']) {
+            error += result.data['errors'][i].message;
+        }
+        return error;
+    }
+};
+
+const audioGetAllByUserNameService = async (data) => {
+    const {currentPage, currentSize, userName} = data;
+    let result = await audioGetAllByUserName(currentPage, currentSize, userName);
+    if (result.code === 0) {
+        return result.data;
+    } else {
+        // 如果报错，将异常信息拼接之后返回到前端
+        let error = '';
+        for (let i in result.data['errors']) {
+            error += result.data['errors'][i].message;
+        }
+        return error;
+    }
+};
+
 const audioDeleteService = async (userInfo, id) => {
     let result = null;
     if (userInfo.role !== 0) {
@@ -173,13 +203,58 @@ const audioChange = async (data) => {
 
 };
 
-
 const audioGetAll = async (currentPage, currentSize) => {
     let result = null;
     try {
         let audios = await Audio.findAndCountAll({
             offset: (currentPage - 1) * currentSize,
             limit: currentSize
+        });
+        result = {
+            code: 0,
+            data: audios
+        };
+    } catch (err) {
+        result = {
+            code: -1,
+            data: err
+        }
+    }
+    return result;
+};
+
+const audioGetAllByType = async (currentPage, currentSize, audioType) => {
+    let result = null;
+    try {
+        let audios = await Audio.findAndCountAll({
+            offset: (currentPage - 1) * currentSize,
+            limit: currentSize,
+            where: {
+                audioType: audioType
+            }
+        });
+        result = {
+            code: 0,
+            data: audios
+        };
+    } catch (err) {
+        result = {
+            code: -1,
+            data: err
+        }
+    }
+    return result;
+};
+
+const audioGetAllByUserName = async (currentPage, currentSize, userName) => {
+    let result = null;
+    try {
+        let audios = await Audio.findAndCountAll({
+            offset: (currentPage - 1) * currentSize,
+            limit: currentSize,
+            where: {
+                createUser: userName
+            }
         });
         result = {
             code: 0,
@@ -228,5 +303,7 @@ module.exports = {
     audioGetAllService,
     audioDeleteService,
     audioChangeService,
-    audioGetOneService
+    audioGetOneService,
+    audioGetAllByTypeService,
+    audioGetAllByUserNameService
 };

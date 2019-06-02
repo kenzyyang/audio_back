@@ -51,6 +51,36 @@ const chapterAddUploadService = async (userInfo, data) => {
     }
 };
 
+const chapterAddAndUploadService = async (userInfo, data) => {
+    if (userInfo.role === 2) {
+        return '暂无权限操作';
+    } else {
+        const params = {
+            belongedAudio: data.belongedAudio,
+            chapter: data.chapter,
+            createUser: userInfo.userName,
+            title: data.title,
+            abstract: data.abstract,
+            audio: data.audio
+        };
+        // 调用新增函数
+        let result = await chapterAdd(params);
+        let audio = result.data;
+        if (result.code === 0) {
+            // 调用上传函数
+            let result = await chapterAddUpload(audio.id, params.audio);
+            if (result.code === 0) {
+                return result.data;
+
+            } else {
+                return result.message.toString();
+            }
+        } else {
+            return result.message.toString();
+        }
+    }
+};
+
 /**
  *   @author:  kenzyyang
  *   @date:  2019-5-9
@@ -105,7 +135,7 @@ const chapterGetAllByIdService = async (data) => {
         currentSize,
         uploaded
     } = data;
-    let result = await chapterGetAllById(id, currentPage, currentSize,uploaded);
+    let result = await chapterGetAllById(id, currentPage, currentSize, uploaded);
     if (result.code === 0) {
         return result.data;
     } else {
@@ -260,11 +290,11 @@ const chapterDelete = async (id) => {
     return result;
 };
 
-const chapterGetAllById = async (id, currentPage, currentSize,uploaded) => {
+const chapterGetAllById = async (id, currentPage, currentSize, uploaded) => {
     let result = null;
     try {
-        let  chapters = null;
-        if(uploaded === 'all'){
+        let chapters = null;
+        if (uploaded === 'all') {
             chapters = Chapter.findAndCountAll({
                 where: {
                     belongedAudio: id,
@@ -272,8 +302,7 @@ const chapterGetAllById = async (id, currentPage, currentSize,uploaded) => {
                 offset: (currentPage - 1) * currentSize,
                 limit: currentSize
             });
-        }
-        else{
+        } else {
             chapters = Chapter.findAndCountAll({
                 where: {
                     belongedAudio: id,
@@ -301,5 +330,6 @@ module.exports = {
     chapterAddUploadService,
     chapterDeleteService,
     chapterGetAllByIdService,
-    chapterChangeService
+    chapterChangeService,
+    chapterAddAndUploadService
 };

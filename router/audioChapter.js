@@ -11,7 +11,8 @@ audioChapter.post('/chapterAdd', Chapter.chapterAdd);
 audioChapter.post('/chapterAddUpload', Chapter.chapterAudioUpload);
 audioChapter.post('/chapterDelete', Chapter.chapterDelete);
 audioChapter.post('/chapterGetAllById', Chapter.audioGetAllById);
-audioChapter.post('/chapterChange',Chapter.chapterChange);
+audioChapter.post('/chapterChange', Chapter.chapterChange);
+audioChapter.post('/chapterAddAndUpload', Chapter.chapterAddAndUpload);
 // 通用拦截 get 请求
 audioChapter.get('*', async (ctx) => {
     ctx.body = '仅支持post请求';

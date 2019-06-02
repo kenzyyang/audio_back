@@ -8,7 +8,9 @@ const {
     audioGetAllService,
     audioDeleteService,
     audioChangeService,
-    audioGetOneService
+    audioGetOneService,
+    audioGetAllByTypeService,
+    audioGetAllByUserNameService
 } = require('../service/audio');
 
 const audioAdd = async (ctx, next) => {
@@ -53,6 +55,62 @@ const audioGetAll = async (ctx, next) => {
             currentSize
         };
         let audios = await audioGetAllService(data);
+        if (typeof audios === 'string') {
+            ctx.response.body = error(audios);
+        } else {
+            const result = {
+                count: audios.count,
+                list: audios.rows
+            };
+            ctx.response.body = success(result);
+        }
+    }
+    next();
+};
+
+const audioGetAllByType = async (ctx, next) => {
+    const {
+        currentPage,
+        currentSize,
+        audioType
+    } = ctx.request.body;
+    if (isNaN(Number.parseInt(currentPage)) || isNaN(Number.parseInt(currentSize)) || isNaN(Number.parseInt(audioType))) {
+        ctx.response.body = paramsMissing();
+    } else {
+        let data = {
+            currentPage,
+            currentSize,
+            audioType
+        };
+        let audios = await audioGetAllByTypeService(data);
+        if (typeof audios === 'string') {
+            ctx.response.body = error(audios);
+        } else {
+            const result = {
+                count: audios.count,
+                list: audios.rows
+            };
+            ctx.response.body = success(result);
+        }
+    }
+    next();
+};
+
+const audioGetAllByUserName = async (ctx, next) => {
+    const {
+        currentPage,
+        currentSize,
+        userName = ''
+    } = ctx.request.body;
+    if (isNaN(Number.parseInt(currentPage)) || isNaN(Number.parseInt(currentSize)) || userName === '') {
+        ctx.response.body = paramsMissing();
+    } else {
+        let data = {
+            currentPage,
+            currentSize,
+            userName
+        };
+        let audios = await audioGetAllByUserNameService(data);
         if (typeof audios === 'string') {
             ctx.response.body = error(audios);
         } else {
@@ -133,5 +191,7 @@ module.exports = {
     audioGetAll,
     audioDelete,
     audioChange,
-    audioGetOne
+    audioGetOne,
+    audioGetAllByType,
+    audioGetAllByUserName
 };

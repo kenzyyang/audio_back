@@ -14,7 +14,8 @@ const {
     chapterAddUploadService,
     chapterDeleteService,
     chapterGetAllByIdService,
-    chapterChangeService
+    chapterChangeService,
+    chapterAddAndUploadService
 } = require('../service/audioChapter');
 
 /**
@@ -22,8 +23,45 @@ const {
  *  @date:  2019-5-9
  *  @desc:  新增章节接口
  *  @method:  POST
- *  @param:  belongedAudio  number  所属有声书
- *  @param:  chapter  number   序号，排序用
+ * */
+const chapterAddAndUpload = async (ctx, next) => {
+    const userInfo = ctx.tokenInfo;
+    const {
+        belongedAudio = '',
+        chapter = '',
+        title = '',
+        abstract = ''
+    } = ctx.request.body;
+    const {
+        audio = null
+    } = ctx.request.files;
+    if (belongedAudio === '' || chapter === '' || title === '' || abstract === '' || isNaN(Number.parseInt(belongedAudio)) || isNaN(Number.parseInt(chapter))) {
+        ctx.response.body = paramsMissing();
+    } else if (!/.mp3$/.test(audio.name) || (audio.type !== 'audio/mp3' && audio.type !== 'audio/mpeg')) {
+        ctx.response.body = paramsMissing();
+    } else {
+        const params = {
+            belongedAudio,
+            chapter,
+            title,
+            abstract,
+            audio
+        };
+        const chapters = await chapterAddAndUploadService(userInfo, params);
+        if (typeof chapters === 'string') {
+            ctx.response.body = error(chapters);
+        } else {
+            ctx.response.body = success(chapters);
+        }
+    }
+    next();
+};
+
+/**
+ *  @author:  kenzyyang
+ *  @date:  2019-6-2
+ *  @desc:  新增章节接口，录音一起上传
+ *  @method:  POST
  * */
 const chapterAdd = async (ctx, next) => {
     const userInfo = ctx.tokenInfo;
@@ -133,10 +171,9 @@ const chapterChange = async (ctx, next) => {
             chapter
         };
         let chapters = await chapterChangeService(userInfo, params);
-        if(typeof chapters === 'string'){
+        if (typeof chapters === 'string') {
             ctx.response.body = error(chapters);
-        }
-        else{
+        } else {
             ctx.response.body = success(chapters);
         }
     }
@@ -157,7 +194,7 @@ const audioGetAllById = async (ctx, next) => {
         currentSize = '',
         uploaded
     } = ctx.request.body;
-    if (id === ''|| uploaded=== undefined || isNaN(Number.parseInt(id)) || currentPage === '' || currentSize === '' || isNaN(Number.parseInt(currentSize)) || isNaN(Number.parseInt(currentPage))) {
+    if (id === '' || uploaded === undefined || isNaN(Number.parseInt(id)) || currentPage === '' || currentSize === '' || isNaN(Number.parseInt(currentSize)) || isNaN(Number.parseInt(currentPage))) {
         ctx.response.body = paramsMissing();
     } else {
         const params = {
@@ -185,5 +222,6 @@ module.exports = {
     chapterAudioUpload,
     chapterDelete,
     audioGetAllById,
-    chapterChange
+    chapterChange,
+    chapterAddAndUpload
 };
